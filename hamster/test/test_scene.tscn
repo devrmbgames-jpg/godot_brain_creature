@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://c253m3w1j8efa"]
 
+[ext_resource type="Script" uid="uid://crtr7svu00vxy" path="res://hamster/test/test_scene.gd" id="1_2qu7e"]
 [ext_resource type="PackedScene" uid="uid://dtrod2yad731n" path="res://hamster/test/test_hamster.tscn" id="1_jh5xr"]
 [ext_resource type="PackedScene" uid="uid://bpxrq68uqlcx2" path="res://hamster/test/test_food.tscn" id="2_s73xx"]
 [ext_resource type="PackedScene" uid="uid://duqhd3ely3qvs" path="res://hamster/test/test_rock.tscn" id="3_2qu7e"]
@@ -19,6 +20,7 @@ ambient_light_source = 2
 ambient_light_color = Color(0.95347077, 0.9397204, 0.9351703, 1)
 
 [node name="TestScene" type="Node3D" unique_id=1904574930]
+script = ExtResource("1_2qu7e")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1212705349]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.880894, 8.403925)
@@ -54,6 +56,7 @@ transform = Transform3D(0.9945674, -0.079986885, -0.06661655, 0.10409451, 0.7642
 shadow_enabled = true
 
 [node name="TestHamster" parent="." unique_id=1466840017 instance=ExtResource("1_jh5xr")]
+unique_name_in_owner = true
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.21390945, 6.980946, 0)
 
 [node name="TestFood" parent="." unique_id=1854811558 instance=ExtResource("2_s73xx")]
@@ -92,3 +95,25 @@ capacity = 5.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=646322477]
 environment = SubResource("Environment_s73xx")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1564373723]
+
+[node name="Panel" type="Panel" parent="CanvasLayer" unique_id=1283338085]
+offset_right = 757.0
+offset_bottom = 328.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Panel" unique_id=1205054371]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Panel/ScrollContainer" unique_id=1847931671]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Panel/ScrollContainer/MarginContainer" unique_id=171586847]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14

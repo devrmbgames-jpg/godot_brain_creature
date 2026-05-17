@@ -1,14 +1,14 @@
 class_name GameActionMate
 extends GameAction
 
-var _target: Node = null
+var _target: Node3D = null
 
 func _init() -> void:
 	action_type = GameEnums.ActionType.MATE
 	duration    = 2.0
 	reach       = 50.0
 
-func _can_execute(target: Node) -> bool:
+func _can_execute(target: Node3D) -> bool:
 	if target == null or not target.has_method("can_mate"):
 		return false
 	if _distance_to(target) > reach:
@@ -23,10 +23,10 @@ func _can_execute(target: Node) -> bool:
 		return false
 	return target.can_mate(_character)
 
-func _on_start(target: Node) -> void:
+func _on_start(target: Node3D) -> void:
 	_target = target
 
-func _on_finish(_t: Node) -> void:
+func _on_finish(_t: Node3D) -> void:
 	if _target == null:
 		return
 	var brain := _brain()

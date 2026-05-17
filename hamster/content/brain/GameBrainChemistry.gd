@@ -10,7 +10,7 @@ func _init(dna: GameBrainDNA) -> void:
 	levels.fill(0.0)
 
 ## Inject a dose of a hormone (clamped to [0,1]).
-func emit(hormone: int, dose: float) -> void:
+func emit(hormone: GameEnums.HormoneType, dose: float) -> void:
 	if hormone < GameEnums.HormoneType.MAX:
 		levels[hormone] = clampf(levels[hormone] + dose, 0.0, 1.0)
 

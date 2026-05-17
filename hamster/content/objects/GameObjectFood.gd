@@ -24,7 +24,7 @@ func get_eat_properties() -> EatProperty:
 	)
 
 
-func on_bitten(_damage: float) -> void:
+func on_bitten(_p_damage: float) -> void:
 	_remaining_servings -= 1
 	if _remaining_servings <= 0:
 		object_destroyed.emit(self)

@@ -33,6 +33,7 @@ func _apply_dna_to_attrs() -> void:
 	# Slight random variation in size/weight
 	attributes.set_val(GameEnums.AttributeID.SIZE,   randf_range(0.4, 0.7))
 	attributes.set_val(GameEnums.AttributeID.WEIGHT, randf_range(0.3, 0.6))
+	attributes.set_val(GameEnums.AttributeID.DRIVE_BOREDOM, 0.5)
 
 func _register_actions() -> void:
 	_add_action(GameActionWalk.new())
@@ -82,7 +83,7 @@ func _scan_and_perceive() -> void:
 
 	update_perception(nearby)
 
-func _resolve_object_type(node: Node) -> int:
+func _resolve_object_type(node: Node3D) -> GameEnums.ObjectType:
 	if node.has_method("get_object_type"):
 		return node.get_object_type()
 	if node is GameCharacter:
@@ -91,7 +92,7 @@ func _resolve_object_type(node: Node) -> int:
 
 # ── World lookups ─────────────────────────────────────────────────────────────
 
-func _find_nearest_of_type(type: int) -> Node3D:
+func _find_nearest_of_type(type: GameEnums.ObjectType) -> Node3D:
 	var my_pos := global_position
 	var best: Node3D   = null
 	var best_d: float = INF

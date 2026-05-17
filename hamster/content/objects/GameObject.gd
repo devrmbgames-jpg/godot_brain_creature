@@ -3,8 +3,8 @@ extends CharacterBody3D
 ## Base class for all interactive world objects.
 ## Extend this and override the virtual methods to create new object types.
 
-signal object_destroyed(object: Node)
-signal object_interacted(object: Node, interactor: Node)
+signal object_destroyed(object: Node3D)
+signal object_interacted(object: Node3D, interactor: Node3D)
 
 ## Unique type identifier — must be set by each subclass.
 @export var object_type: GameEnums.ObjectType = GameEnums.ObjectType.UNKNOWN
@@ -17,7 +17,7 @@ signal object_interacted(object: Node, interactor: Node)
 @export var blocks_movement: bool = false
 
 var is_held: bool = false
-var holder: Node = null
+var holder: Node3D = null
 
 class EatProperty :
 	var edible: bool
@@ -57,7 +57,7 @@ func _ready() -> void:
 func _on_init() -> void:
 	pass
 
-func get_object_type() -> int:
+func get_object_type() -> GameEnums.ObjectType:
 	return object_type
 
 # ── Interaction interface ─────────────────────────────────────────────────────
@@ -94,7 +94,7 @@ func on_bitten(damage: float) -> void:
 func on_pushed(direction: Vector3, force: float) -> void:
 	pass
 
-func on_picked_up(who: Node) -> void:
+func on_picked_up(who: Node3D) -> void:
 	is_held = true
 	holder  = who
 	hide()
@@ -106,16 +106,16 @@ func on_dropped(drop_position: Vector3) -> void:
 		global_position = drop_position
 	show()
 
-func on_used(who: Node) -> void:
+func on_used(who: Node3D) -> void:
 	object_interacted.emit(self, who)
 
-func on_use_started(_who: Node) -> void:
+func on_use_started(_who: Node3D) -> void:
 	pass
 
-func on_use_tick(_delta: float, _who: Node) -> void:
+func on_use_tick(_delta: float, _who: Node3D) -> void:
 	pass
 
-func receive_communication(_sender: Node, _payload: Dictionary) -> void:
+func receive_communication(_sender: Node3D, _payload: Dictionary) -> void:
 	pass
 
 # ── Durability ────────────────────────────────────────────────────────────────

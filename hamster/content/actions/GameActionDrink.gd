@@ -1,20 +1,20 @@
 class_name GameActionDrink
 extends GameAction
 
-var _target: Node = null
+var _target: Node3D = null
 
 func _init() -> void:
 	action_type = GameEnums.ActionType.DRINK
 	duration    = 1.0
 	reach       = 55.0
 
-func _can_execute(target: Node) -> bool:
+func _can_execute(target: Node3D) -> bool:
 	return target != null and _distance_to(target) <= reach
 
-func _on_start(target: Node) -> void:
+func _on_start(target: Node3D) -> void:
 	_target = target
 
-func _on_finish(_t: Node) -> void:
+func _on_finish(_t: Node3D) -> void:
 	if _target == null or not _target.has_method("get_drink_properties"):
 		return
 	var props: GameObject.DrinkProperty = _target.get_drink_properties()

@@ -1,5 +1,5 @@
 class_name GameBrain
-extends Node
+extends Node3D
 ## Creatures-style neural brain.
 ## Architecture (lobes and data-flow):
 ##
@@ -13,10 +13,10 @@ extends Node
 ##   3. Score every (verb, noun) pair → pick winner → emit chosen_action signal
 ##   4. After action executes, compute drive-delta reward → run learning pass
 
-signal chosen_action(action_type: int, target_object_type: int, target_object: Node)
-signal drive_changed(drive_type: int, new_value: float)
+signal chosen_action(action_type: GameEnums.ActionType, target_object_type: GameEnums.ObjectType, target_object: Node3D)
+signal drive_changed(drive_type: GameEnums.DriveType, new_value: float)
 @warning_ignore("unused_signal")
-signal hormone_emitted(hormone_type: int, level: float)
+signal hormone_emitted(hormone_type: GameEnums.HormoneType, level: float)
 
 # ── Sub-systems ───────────────────────────────────────────────────────────────
 var dna:       GameBrainDNA
@@ -32,9 +32,9 @@ var lobe_verb:       GameBrainLobe  ## one neuron per action
 var lobe_noun:       GameBrainLobe  ## one neuron per object type
 
 # ── State ─────────────────────────────────────────────────────────────────────
-var current_action: int = GameEnums.ActionType.IDLE
-var current_target_type: int = GameEnums.ObjectType.UNKNOWN
-var current_target: Node = null
+var current_action: GameEnums.ActionType = GameEnums.ActionType.IDLE
+var current_target_type: GameEnums.ObjectType = GameEnums.ObjectType.UNKNOWN
+var current_target: Node3D = null
 
 var _drives_before:  Array[float] = []
 var _time:           float = 0.0
@@ -97,17 +97,13 @@ func _brain_tick() -> void:
 	_snapshot_drives()
 	_perceive()
 	_forward_pass()
-	var action: int  = 0
-	var noun_idx: int = 0
-	var r := _decide(action, noun_idx)
-	action = r[0]
-	noun_idx = r[1]
-	_execute_decision(action, noun_idx)
+	var r := _decide()
+	_execute_decision(r[0], r[1])
 
 # ── Attribute helpers ─────────────────────────────────────────────────────────
 
 func _get_attrs() -> GameAttributeContainer:
-	var owner_node: Node = get_parent()
+	var owner_node: Node3D = get_parent()
 	if owner_node and owner_node.has_method("get_attrs"):
 		return owner_node.get_attrs()
 	return null
@@ -171,7 +167,7 @@ func _tick_digestion(delta: float) -> void:
 # ── Perception ────────────────────────────────────────────────────────────────
 
 ## Fill perception lobe from nearby objects.
-## nearby_objects: Array of { "object": Node, "type": int, "distance": float, "position": Vector3 }
+## nearby_objects: Array of { "object": Node3D, "type": int, "distance": float, "position": Vector3 }
 func perceive(nearby_objects: Array[GameCharacter.NearbyObject]) -> void:
 	# Clear all perception neurons first
 	for i in lobe_perception.size():
@@ -181,10 +177,10 @@ func perceive(nearby_objects: Array[GameCharacter.NearbyObject]) -> void:
 	var sight := (attrs.get_value(GameEnums.AttributeID.SIGHT_RANGE) if attrs else 1.0) * 300.0  # world units
 
 	for entry in nearby_objects:
-		var ot: int      = entry.type
+		var ot: GameEnums.ObjectType = entry.type
 		var dist: float  = entry.distance
 		var pos: Vector3 = entry.position
-		var obj: Node    = entry.object
+		var obj: Node3D    = entry.object
 		
 		if ot <= 0 or ot >= GameEnums.ObjectType.MAX:
 			continue
@@ -196,8 +192,8 @@ func perceive(nearby_objects: Array[GameCharacter.NearbyObject]) -> void:
 		lobe_perception.stimulate(base + 1, dist_norm)             # distance
 		lobe_perception.stimulate(base + 2, clampf(dir.x, -1.0, 1.0))  # dir_x
 		lobe_perception.stimulate(base + 3, clampf(dir.y, -1.0, 1.0))  # dir_y
-		memory.remember_object(ot, pos)
-		if obj:
+		#memory.remember_object(ot, pos)
+		if obj and is_instance_valid(obj):
 			memory.remember_object(ot, pos)
 
 func _perceive() -> void:
@@ -221,7 +217,7 @@ func _forward_pass() -> void:
 
 # ── Decision ──────────────────────────────────────────────────────────────────
 
-func _decide(out_action: int, out_noun: int) -> Array[int]:
+func _decide() -> Array:
 	# Score every (verb, noun) combination: score = verb_act × noun_act
 	# Bias score by how much that action would reduce the top drive.
 	var best_score := -INF
@@ -239,12 +235,10 @@ func _decide(out_action: int, out_noun: int) -> Array[int]:
 
 	current_action      = best_verb
 	current_target_type = best_noun
-	out_action = best_verb
-	out_noun   = best_noun
 	
-	return [out_action, out_noun]
+	return [current_action, current_target_type]
 
-func _execute_decision(action: int, noun: int) -> void:
+func _execute_decision(action: GameEnums.ActionType, noun: GameEnums.ObjectType) -> void:
 	current_action      = action
 	current_target_type = noun
 	# Find the closest matching object in memory as the target
@@ -252,7 +246,7 @@ func _execute_decision(action: int, noun: int) -> void:
 	chosen_action.emit(action, noun, current_target)
 
 ## Hard-coded bias table: certain actions relieve certain drives.
-func _drive_bias(action: int, noun: int) -> float:
+func _drive_bias(action: GameEnums.ActionType, noun: GameEnums.ObjectType) -> float:
 	var hunger    := _get_drive(GameEnums.DriveType.HUNGER)
 	var thirst    := _get_drive(GameEnums.DriveType.THIRST)
 	var tiredness := _get_drive(GameEnums.DriveType.TIREDNESS)
@@ -289,8 +283,8 @@ func _drive_bias(action: int, noun: int) -> float:
 			bias += boredom * 0.5
 	return bias
 
-## Try to find the actual Node that matches the noun type via nearby cache.
-func _find_target(noun: int) -> Node:
+## Try to find the actual Node3D that matches the noun type via nearby cache.
+func _find_target(noun: GameEnums.ObjectType) -> Node3D:
 	# The character's action handler will search the scene tree;
 	# the brain just remembers the type and remembered position.
 	return null  # actual lookup deferred to GameCharacter
@@ -303,11 +297,16 @@ func _snapshot_drives() -> void:
 
 ## Call this after an action completes.
 ## Computes a scalar reward from drive delta and runs Hebbian learning.
-func on_action_completed(action_type: int) -> void:
+func on_action_completed(action_type: GameEnums.ActionType) -> void:
 	var reward := _compute_reward()
 	_learn(reward)
-	memory.record_episode(_time, current_target_type, action_type,
-		_owner_position(), reward)
+	memory.record_episode(
+		_time, 
+		current_target_type, 
+		action_type,
+		_owner_position(), 
+		reward
+	)
 	if reward > 0.2:
 		chemistry.on_reward()
 
@@ -332,7 +331,7 @@ func on_perceived_threat(severity: float) -> void:
 	chemistry.on_threatened()
 	_add_drive(GameEnums.DriveType.FEAR, severity * 0.3)
 
-func on_social_contact(other: Node) -> void:
+func on_social_contact(other: Node3D) -> void:
 	chemistry.on_social_contact()
 	_add_drive(GameEnums.DriveType.LONELINESS, -0.3)
 
@@ -377,11 +376,14 @@ func on_used_wheel() -> void:
 func debug_state() -> Dictionary:
 	var drives := {}
 	for d in GameEnums.DriveType.MAX:
-		drives[d] = _get_drive(d)
+		drives[GameEnums.DriveType.keys()[d]] = _get_drive(d)
+	var hormones := {}
+	for h in GameEnums.HormoneType.MAX :
+		hormones[GameEnums.HormoneType.keys()[h]] = chemistry.levels[h]
 	return {
-		"action":   current_action,
-		"target":   current_target_type,
+		"action":   GameEnums.ActionType.keys()[current_action],
+		"target":   GameEnums.ObjectType.keys()[current_target_type],
 		"drives":   drives,
-		"hormones": chemistry.levels.duplicate(),
+		"hormones": hormones,
 		"memory_spatial": memory.spatial.keys(),
 	}

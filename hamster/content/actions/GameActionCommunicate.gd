@@ -1,22 +1,22 @@
 class_name GameActionCommunicate
 extends GameAction
 
-var _target: Node = null
+var _target: Node3D = null
 
 func _init() -> void:
 	action_type = GameEnums.ActionType.COMMUNICATE
 	duration    = 1.5
 	reach       = 80.0
 
-func _can_execute(target: Node) -> bool:
+func _can_execute(target: Node3D) -> bool:
 	return (target != null
 		and target.has_method("receive_communication")
 		and _distance_to(target) <= reach)
 
-func _on_start(target: Node) -> void:
+func _on_start(target: Node3D) -> void:
 	_target = target
 
-func _on_finish(_t: Node) -> void:
+func _on_finish(_t: Node3D) -> void:
 	if _target == null:
 		return
 	var brain := _brain()

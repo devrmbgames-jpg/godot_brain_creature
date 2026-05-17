@@ -1,14 +1,14 @@
 class_name GameActionPickUp
 extends GameAction
 
-var _target: Node = null
+var _target: Node3D = null
 
 func _init() -> void:
 	action_type = GameEnums.ActionType.PICK_UP
 	duration    = 0.4
 	reach       = 50.0
 
-func _can_execute(target: Node) -> bool:
+func _can_execute(target: Node3D) -> bool:
 	if target == null or not target.has_method("can_be_picked_up"):
 		return false
 	if not target.can_be_picked_up():
@@ -22,10 +22,10 @@ func _can_execute(target: Node) -> bool:
 			return false  # already holding something
 	return true
 
-func _on_start(target: Node) -> void:
+func _on_start(target: Node3D) -> void:
 	_target = target
 
-func _on_finish(_t: Node) -> void:
+func _on_finish(_t: Node3D) -> void:
 	if _target == null:
 		return
 	if _character.has_method("set_held_object"):

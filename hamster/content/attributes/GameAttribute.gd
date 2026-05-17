@@ -1,11 +1,11 @@
 class_name GameAttribute
 
-var id: int
+var id: GameEnums.AttributeID
 var value: float
 var min_value: float
 var max_value: float
 
-func _init(p_id: int, p_value: float, p_min: float = -1.0, p_max: float = 1.0) -> void:
+func _init(p_id: GameEnums.AttributeID, p_value: float, p_min: float = -1.0, p_max: float = 1.0) -> void:
 	id = p_id
 	min_value = p_min
 	max_value = p_max

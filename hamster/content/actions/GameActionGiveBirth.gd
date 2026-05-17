@@ -5,13 +5,13 @@ func _init() -> void:
 	action_type = GameEnums.ActionType.GIVE_BIRTH
 	duration    = 3.0
 
-func _can_execute(_target: Node) -> bool:
+func _can_execute(_target: Node3D) -> bool:
 	var attrs := _attrs()
 	if attrs == null:
 		return false
 	return attrs.get_value(GameEnums.AttributeID.PREGNANCY) >= 1.0
 
-func _on_finish(_target: Node) -> void:
+func _on_finish(_target: Node3D) -> void:
 	if _character and _character.has_method("spawn_offspring"):
 		_character.spawn_offspring()
 	var attrs := _attrs()

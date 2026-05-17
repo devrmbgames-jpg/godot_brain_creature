@@ -4,28 +4,26 @@ extends GameAction
 ## The hamster can bite ANYTHING — edible or not.
 ## Non-edible objects may injure or poison the hamster.
 
-var _target: Node = null
+var _target: Node3D = null
 
 func _init() -> void:
 	action_type = GameEnums.ActionType.EAT
 	duration    = 1.2
 	reach       = 50.0
 
-func _can_execute(target: Node) -> bool:
+func _can_execute(target: Node3D) -> bool:
 	if target == null:
 		return false
 	return _distance_to(target) <= reach
 
-func _on_start(target: Node) -> void:
+func _on_start(target: Node3D) -> void:
 	_target = target
 	# Move toward target while there's still time on the clock
-	if _character is Node3D and target is Node3D:
-		var c := _character as Node3D
-		var t := target as Node3D
-		c.global_position = c.global_position.lerp(t.global_position, 0.5)
-		c.global_position.z = 0.0
+	if _character and target :
+		_character.global_position = _character.global_position.lerp(target.global_position, 0.5)
+		_character.global_position.z = 0.0
 
-func _on_finish(_t: Node) -> void:
+func _on_finish(_t: Node3D) -> void:
 	if _target == null:
 		return
 	if not _target.has_method("get_eat_properties"):

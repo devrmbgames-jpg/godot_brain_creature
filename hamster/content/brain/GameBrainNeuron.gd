@@ -3,13 +3,13 @@ class_name GameBrainNeuron
 
 var activation: float = 0.0       ## current output value
 var prev_activation: float = 0.0  ## last tick's value (for Hebbian)
-var lobe_type: int = 0
+var lobe_type: GameEnums.LobeType = GameEnums.LobeType.PERCEPTION
 var index: int = 0                 ## position within the lobe
 
 ## Dendrites entering this neuron (type: Array[GameBrainDendrite])
 var dendrites: Array[GameBrainDendrite] = []
 
-func _init(p_lobe: int, p_index: int) -> void:
+func _init(p_lobe: GameEnums.LobeType, p_index: int) -> void:
 	lobe_type = p_lobe
 	index = p_index
 

@@ -1,7 +1,7 @@
 class_name GameAttributeContainer
 extends Resource
 
-var _attrs: Dictionary = {}
+var _attrs: Dictionary[GameEnums.AttributeID, GameAttribute] = {}
 
 ## Build the default attribute set. All values normalized to [-1,1] via GameAttribute.
 func _init() -> void:
@@ -13,7 +13,7 @@ func _init() -> void:
 	_define(GameEnums.AttributeID.MAX_AGE,            1.0,  0.0,  1.0)
 	_define(GameEnums.AttributeID.WEIGHT,             0.5,  0.0,  1.0)
 	_define(GameEnums.AttributeID.SIZE,               0.5,  0.0,  1.0)
-	_define(GameEnums.AttributeID.SPEED,              0.0,  0.0,  1.0)
+	_define(GameEnums.AttributeID.SPEED,              1.0,  0.0,  1.0)
 	_define(GameEnums.AttributeID.MAX_SPEED,          1.0,  0.0,  1.0)
 
 	# Drives – 0 = satisfied, 1 = urgent
@@ -59,35 +59,35 @@ func _init() -> void:
 	# Toxicology
 	_define(GameEnums.AttributeID.TOXIN_LEVEL,        0.0,  0.0,  1.0)
 
-func _define(id: int, value: float, mn: float, mx: float) -> void:
+func _define(id: GameEnums.AttributeID, value: float, mn: float, mx: float) -> void:
 	_attrs[id] = GameAttribute.new(id, value, mn, mx)
 
-func get_attr(id: int) -> GameAttribute:
+func get_attr(id: GameEnums.AttributeID) -> GameAttribute:
 	return _attrs.get(id)
 
-func get_value(id: int) -> float:
+func get_value(id: GameEnums.AttributeID) -> float:
 	var a: GameAttribute = _attrs.get(id)
 	return a.value if a else 0.0
 
-func set_val(id: int, v: float) -> void:
+func set_val(id: GameEnums.AttributeID, v: float) -> void:
 	var a: GameAttribute = _attrs.get(id)
 	if a:
 		a.set_value(v)
 
-func add(id: int, delta: float) -> void:
+func add(id: GameEnums.AttributeID, delta: float) -> void:
 	var a: GameAttribute = _attrs.get(id)
 	if a:
 		a.add(delta)
 
-func ratio(id: int) -> float:
+func ratio(id: GameEnums.AttributeID) -> float:
 	var a: GameAttribute = _attrs.get(id)
 	return a.ratio() if a else 0.0
 
-func normalized(id: int) -> float:
+func normalized(id: GameEnums.AttributeID) -> float:
 	var a: GameAttribute = _attrs.get(id)
 	return a.normalized() if a else 0.0
 
 ## Register a custom attribute at runtime (for extensibility).
-func register(id: int, value: float, mn: float = 0.0, mx: float = 1.0) -> void:
+func register(id: GameEnums.AttributeID, value: float, mn: float = 0.0, mx: float = 1.0) -> void:
 	if not _attrs.has(id):
 		_attrs[id] = GameAttribute.new(id, value, mn, mx)

@@ -5,13 +5,13 @@ func _init() -> void:
 	action_type = GameEnums.ActionType.DEFECATE
 	duration    = 0.8
 
-func _can_execute(_target: Node) -> bool:
+func _can_execute(_target: Node3D) -> bool:
 	var attrs := _attrs()
 	if attrs == null:
 		return false
 	return attrs.get_value(GameEnums.AttributeID.INTESTINE_FULLNESS) > 0.05
 
-func _on_finish(_target: Node) -> void:
+func _on_finish(_target: Node3D) -> void:
 	var brain := _brain()
 	if brain:
 		brain.on_defecated()

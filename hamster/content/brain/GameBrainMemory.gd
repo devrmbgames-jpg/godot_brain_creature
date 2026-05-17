@@ -3,14 +3,14 @@ class_name GameBrainMemory
 
 class Episode :
 	var time: float
-	var object_type: int
-	var action: int
+	var object_type: GameEnums.ObjectType
+	var action: GameEnums.ActionType
 	var position: Vector3
 	var reward: float
 	func _init(
 		p_time: float = 0.0, 
-		p_object_type: int = 0, 
-		p_action: int = 0, 
+		p_object_type: GameEnums.ObjectType = GameEnums.ObjectType.UNKNOWN, 
+		p_action: GameEnums.ActionType = GameEnums.ActionType.IDLE, 
 		p_position: Vector3 = Vector3.ZERO, 
 		p_reward: float = 0) -> void :
 			time = p_time
@@ -43,12 +43,12 @@ func _init() -> void:
 		episodes[i] = null
 
 ## Record a perception event (object seen / interacted with).
-func remember_object(object_type: int, position: Vector3) -> void:
+func remember_object(object_type: GameEnums.ObjectType, position: Vector3) -> void:
 	spatial[object_type] = position
 	familiarity[object_type] = familiarity.get(object_type, 0) + 1
 
 ## Record an action-outcome episode.
-func record_episode(time: float, object_type: int, action: int, position: Vector3, reward: float) -> void:
+func record_episode(time: float, object_type: GameEnums.ObjectType, action: GameEnums.ActionType, position: Vector3, reward: float) -> void:
 	var ep := Episode.new(
 		time,
 		object_type,
@@ -60,19 +60,19 @@ func record_episode(time: float, object_type: int, action: int, position: Vector
 	_ep_index = (_ep_index + 1) % MAX_EPISODES
 
 ## Returns last known position of an object type, or Vector3.ZERO if unknown.
-func recall_position(object_type: int) -> Vector3:
+func recall_position(object_type: GameEnums.ObjectType) -> Vector3:
 	return spatial.get(object_type, Vector3.ZERO)
 
 ## True if the creature has ever encountered this object type.
-func knows_object(object_type: int) -> bool:
+func knows_object(object_type: GameEnums.ObjectType) -> bool:
 	return familiarity.has(object_type)
 
 ## Familiarity score 0-1 (saturates at 100 encounters).
-func familiarity_score(object_type: int) -> float:
+func familiarity_score(object_type: GameEnums.ObjectType) -> float:
 	return clampf(familiarity.get(object_type, 0) / 100.0, 0.0, 1.0)
 
 ## Returns the most recent positive episode position for a given action (or Vector3.ZERO).
-func best_episode_position(action: int) -> Vector3:
+func best_episode_position(action: GameEnums.ActionType) -> Vector3:
 	var best_reward := -INF
 	var best_pos := Vector3.ZERO
 	for ep in episodes:
@@ -87,8 +87,10 @@ func best_episode_position(action: int) -> Vector3:
 
 ## Forget older spatial entries for objects not seen in a while.
 func decay_spatial(current_time: float, half_life: float = 60.0) -> void:
-	var to_remove: Array = []
+	var to_remove: Array[GameEnums.ActionType] = []
 	for ep in episodes:
+		if ep == null :
+			continue
 		if ep.is_empty():
 			continue
 		if current_time - ep.time > half_life * 2.0:

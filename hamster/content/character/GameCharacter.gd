@@ -3,8 +3,8 @@ extends CharacterBody3D
 ## Base character class. The brain is a child node; actions are child nodes too.
 ## Motion and direction follow the 2D (X/Y) convention; Z is always 0.
 
-signal character_died(character: Node)
-signal action_started(action_type: int)
+signal character_died(character: Node3D)
+signal action_started(action_type: GameEnums.ActionType)
 
 ## Direction the character is facing: normalised, Z is always 0.
 @export var direction: Vector3 = Vector3.RIGHT
@@ -30,11 +30,11 @@ signal action_started(action_type: int)
 
 
 # ── Internal state ────────────────────────────────────────────────────────────
-var _held_object:   Node    = null
+var _held_object:   Node3D    = null
 var _current_action: GameAction = null
 var _alive:         bool    = true
 var _actions:       Dictionary[GameEnums.ActionType, GameAction] = {}  ## ActionType -> GameAction
-var _mate_partner:  Node = null
+var _mate_partner:  Node3D = null
 var _start_jump_up := false
 var _start_jump_forward := false
 
@@ -129,7 +129,7 @@ func _add_action(action: GameAction) -> void:
 
 # ── Brain callback ────────────────────────────────────────────────────────────
 
-func _on_brain_chose_action(action_type: int, target_type: int, _target: Node) -> void:
+func _on_brain_chose_action(action_type: GameEnums.ActionType, target_type: GameEnums.ObjectType, _target: Node3D) -> void:
 	if not _alive:
 		return
 	if _current_action and _current_action.is_running():
@@ -144,8 +144,11 @@ func _on_brain_chose_action(action_type: int, target_type: int, _target: Node) -
 	if action.execute(target_node):
 		_current_action = action
 		action_started.emit(action_type)
+	else :
+		if brain:
+			brain.on_action_completed(action_type)
 
-func _on_action_completed(action_type: int) -> void:
+func _on_action_completed(action_type: GameEnums.ActionType) -> void:
 	if brain:
 		brain.on_action_completed(action_type)
 	_current_action = null
@@ -165,10 +168,10 @@ func get_attrs() -> GameAttributeContainer:
 func get_brain() -> GameBrain:
 	return brain
 
-func get_held_object() -> Node:
+func get_held_object() -> Node3D:
 	return _held_object
 
-func set_held_object(obj: Node) -> void:
+func set_held_object(obj: Node3D) -> void:
 	_held_object = obj
 
 func get_facing() -> float:
@@ -188,7 +191,7 @@ func as_perception_entry() -> Dictionary:
 
 # ── Mating interface ─────────────────────────────────────────────────────────
 
-func can_mate(requester: Node) -> bool:
+func can_mate(requester: Node3D) -> bool:
 	if not _alive:
 		return false
 	var attrs := attributes
@@ -201,7 +204,7 @@ func can_mate(requester: Node) -> bool:
 			return false
 	return attrs.get_value(GameEnums.AttributeID.DRIVE_SEX_DRIVE) > 0.1
 
-func on_mated_with(partner: Node) -> void:
+func on_mated_with(partner: Node3D) -> void:
 	_mate_partner = partner
 	if brain:
 		brain.on_mated()
@@ -210,14 +213,14 @@ func on_mated_with(partner: Node) -> void:
 		attributes.set_val(GameEnums.AttributeID.PREGNANCY, 0.01)
 
 ## Receive communication from another character.
-func receive_communication(sender: Node, _payload: Dictionary) -> void:
+func receive_communication(sender: Node3D, _payload: Dictionary) -> void:
 	if brain:
 		brain.on_social_contact(sender)
 
 # ── World lookups (override in subclass with scene-tree knowledge) ─────────────
 
 ## Find the nearest GameObject of a given ObjectType in the world.
-func _find_nearest_of_type(_type: int) -> Node:
+func _find_nearest_of_type(_type: GameEnums.ObjectType) -> Node3D:
 	return null  ## override in GameHamster or via signal/world reference
 
 ## Spawn a poop object at current position.
@@ -229,14 +232,18 @@ func spawn_offspring() -> void:
 	pass  ## override in subclass
 
 
-func jump_up() -> void :
-	if is_on_floor() :
+func jump_up() -> bool :
+	if is_on_floor() and not _start_jump_up :
 		_start_jump_up = true
+		return true
+	return false
 
 
-func jump_forward() -> void :
-	if is_on_floor() :
+func jump_forward() -> bool :
+	if is_on_floor() and not _start_jump_forward:
 		_start_jump_forward = true
+		return true
+	return false
 
 
 
