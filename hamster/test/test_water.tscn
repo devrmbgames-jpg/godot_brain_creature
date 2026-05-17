@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://dxgqupgrbk0tx"]
+
+[ext_resource type="Script" uid="uid://bmgq50x2oirwt" path="res://hamster/content/objects/GameObjectWaterBowl.gd" id="1_jbv1t"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jbv1t"]
+albedo_color = Color(0, 0.71100736, 0.71100736, 1)
+metallic_specular = 1.0
+roughness = 0.55
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_7df0q"]
+height = 0.115
+radial_segments = 16
+rings = 2
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_jbv1t"]
+points = PackedVector3Array(0.044519298, 0.057499997, 0.47574177, -0.04160683, -0.057499997, -0.44461858, -0.111154646, -0.057499997, -0.4306916, -0.11893544, 0.057499997, -0.4608399, 0.47574177, 0.057499997, -0.044519298, 0.33346394, -0.057499997, 0.30561, -0.41676462, -0.057499997, 0.18061541, -0.47574177, 0.057499997, -0.044519298, 0.33346394, -0.057499997, -0.30561, 0.19325845, 0.057499997, -0.44593805, -0.04160683, -0.057499997, 0.44461858, -0.3270026, 0.057499997, 0.3568063, -0.41676462, -0.057499997, -0.18061541, 0.3568063, 0.057499997, 0.3270026, 0.44461858, -0.057499997, 0.04160683, -0.3568063, 0.057499997, -0.3270026, 0.44593805, 0.057499997, -0.19325845, -0.18061541, -0.057499997, 0.41676462, 0.18061541, -0.057499997, 0.41676462, 0.44593805, 0.057499997, 0.19325845, -0.44593805, 0.057499997, 0.19325845, -0.30561, -0.057499997, -0.33346394, 0.18061541, -0.057499997, -0.41676462, -0.19325845, 0.057499997, 0.44593805, 0.41676462, -0.057499997, -0.18061541, 0.19325845, 0.057499997, 0.44593805, -0.44461858, -0.057499997, 0.04160683, 0.3270026, 0.057499997, -0.3568063, -0.33346394, -0.057499997, 0.30561, -0.19325845, 0.057499997, -0.44593805, 0.044519298, 0.057499997, -0.47574177, -0.44593805, 0.057499997, -0.19325845)
+
+[node name="TestWater" type="CharacterBody3D" unique_id=477064906]
+script = ExtResource("1_jbv1t")
+object_type = 6
+metadata/_custom_type_script = "uid://bmgq50x2oirwt"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2012906044]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00076952577, 0)
+material_override = SubResource("StandardMaterial3D_jbv1t")
+mesh = SubResource("CylinderMesh_7df0q")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=410097024]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00076952577, 0)
+shape = SubResource("ConvexPolygonShape3D_jbv1t")

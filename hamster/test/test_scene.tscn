@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://c253m3w1j8efa"]
+
+[ext_resource type="PackedScene" uid="uid://dtrod2yad731n" path="res://hamster/test/test_hamster.tscn" id="1_jh5xr"]
+[ext_resource type="PackedScene" uid="uid://bpxrq68uqlcx2" path="res://hamster/test/test_food.tscn" id="2_s73xx"]
+[ext_resource type="PackedScene" uid="uid://duqhd3ely3qvs" path="res://hamster/test/test_rock.tscn" id="3_2qu7e"]
+[ext_resource type="PackedScene" uid="uid://dxgqupgrbk0tx" path="res://hamster/test/test_water.tscn" id="4_3shi8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ttfru"]
+albedo_color = Color(0.50058836, 0.6105306, 5.7756904e-07, 1)
+metallic = 0.28
+metallic_specular = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jh5xr"]
+albedo_color = Color(0.18909946, 0.41669887, 0.70684004, 1)
+
+[sub_resource type="Environment" id="Environment_s73xx"]
+background_mode = 1
+ambient_light_source = 2
+ambient_light_color = Color(0.95347077, 0.9397204, 0.9351703, 1)
+
+[node name="TestScene" type="Node3D" unique_id=1904574930]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1212705349]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.880894, 8.403925)
+
+[node name="Node3D" type="Node3D" parent="." unique_id=2088198621]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Node3D" unique_id=358904621]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0039640665, -0.114593506, -0.00033664703)
+use_collision = true
+collision_mask = 3
+size = Vector3(2.644287, 0.38909912, 3.1279297)
+material = SubResource("StandardMaterial3D_ttfru")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Node3D/CSGBox3D" unique_id=1681631637]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2038318, 0.54400635, 0)
+size = Vector3(0.16015625, 2.0880127, 3.1367188)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Node3D/CSGBox3D" unique_id=835476431]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2804824, 0.5584717, 0)
+size = Vector3(0.16015625, 2.1169434, 3.1367188)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Node3D/CSGBox3D" unique_id=657753878]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.13030505, 0.83973014, -0.24338335)
+size = Vector3(0.16015625, 1.465332, 3.1367188)
+material = SubResource("StandardMaterial3D_jh5xr")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Node3D/CSGBox3D" unique_id=1661756896]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7991599, -0.27218422, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1920211593]
+transform = Transform3D(0.9945674, -0.079986885, -0.06661655, 0.10409451, 0.7642319, 0.6364855, 0, -0.6399622, 0.7684064, 0, 1.657284, 2.9529717)
+shadow_enabled = true
+
+[node name="TestHamster" parent="." unique_id=1466840017 instance=ExtResource("1_jh5xr")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.21390945, 6.980946, 0)
+
+[node name="TestFood" parent="." unique_id=1854811558 instance=ExtResource("2_s73xx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.082708, 0.92456365, 0)
+
+[node name="TestFood2" parent="." unique_id=1382589439 instance=ExtResource("2_s73xx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9970284, 0.92456365, 0)
+
+[node name="TestFood4" parent="." unique_id=841501184 instance=ExtResource("2_s73xx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.9043503, 0.92456365, 0)
+
+[node name="TestFood3" parent="." unique_id=737291823 instance=ExtResource("2_s73xx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3191626, 0.9245641, 0)
+
+[node name="TestFood5" parent="." unique_id=1841132528 instance=ExtResource("2_s73xx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8192084, 0.9245641, 0)
+
+[node name="TestFood6" parent="." unique_id=104355164 instance=ExtResource("2_s73xx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9029782, 0.9245641, 0)
+
+[node name="TestRock" parent="." unique_id=648363954 instance=ExtResource("3_2qu7e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4642854, 0.89956367, 0)
+
+[node name="TestRock2" parent="." unique_id=325697620 instance=ExtResource("3_2qu7e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9544396, 0.89956367, 0)
+
+[node name="TestRock3" parent="." unique_id=1541638225 instance=ExtResource("3_2qu7e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.0938425, 0.89956367, 0)
+
+[node name="TestWater" parent="." unique_id=477064906 instance=ExtResource("4_3shi8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.125, 0.83798367, 0)
+
+[node name="TestWater2" parent="." unique_id=68348640 instance=ExtResource("4_3shi8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.67723, 1.1434658, 0)
+capacity = 5.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=646322477]
+environment = SubResource("Environment_s73xx")

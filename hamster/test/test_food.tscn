@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://bpxrq68uqlcx2"]
+
+[ext_resource type="Script" uid="uid://cq5lqes2rhswq" path="res://hamster/content/objects/GameObjectFood.gd" id="1_p6gmw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p6gmw"]
+albedo_color = Color(0.7155024, 0.15755165, 0.8074679, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1xsaj"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ot6bt"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[node name="TestFood" type="CharacterBody3D" unique_id=1854811558]
+collision_layer = 4
+script = ExtResource("1_p6gmw")
+object_type = 1
+metadata/_custom_type_script = "uid://cq5lqes2rhswq"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=777189360]
+material_override = SubResource("StandardMaterial3D_p6gmw")
+mesh = SubResource("BoxMesh_1xsaj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1230981121]
+shape = SubResource("BoxShape3D_ot6bt")

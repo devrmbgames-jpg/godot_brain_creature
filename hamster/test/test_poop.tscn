@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://bnxdpmwxx5yr3"]
+
+[ext_resource type="Script" uid="uid://buclmholfln1e" path="res://hamster/content/objects/GameObjectPoop.gd" id="1_nb25u"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nb25u"]
+albedo_color = Color(0.26935825, 0.1364924, 0.065029785, 1)
+metallic = 0.1
+metallic_specular = 0.71
+rim_enabled = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_iycj6"]
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.1
+radial_segments = 8
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_e8jjo"]
+height = 0.2925415
+radius = 0.15576172
+
+[node name="TestPoop" type="CharacterBody3D" unique_id=560722444]
+collision_layer = 4
+script = ExtResource("1_nb25u")
+object_type = 4
+metadata/_custom_type_script = "uid://buclmholfln1e"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2037962195]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.037274122, 0)
+material_override = SubResource("StandardMaterial3D_nb25u")
+mesh = SubResource("CylinderMesh_iycj6")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1831788395]
+transform = Transform3D(0.655, 0, 0, 0, 1.155, 0, 0, 0, 0.655, 0, 0.11745323, 0)
+material_override = SubResource("StandardMaterial3D_nb25u")
+mesh = SubResource("CylinderMesh_iycj6")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=1532181197]
+transform = Transform3D(0.438, 0, 0, 0, 0.775, 0, 0, 0, 0.438, 0, 0.21450067, 0)
+material_override = SubResource("StandardMaterial3D_nb25u")
+mesh = SubResource("CylinderMesh_iycj6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1718057539]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13563228, 0)
+shape = SubResource("CylinderShape3D_e8jjo")

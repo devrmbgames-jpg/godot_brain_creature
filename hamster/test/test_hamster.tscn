@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://dtrod2yad731n"]
+
+[ext_resource type="Script" uid="uid://c47sd0nyi4ag2" path="res://hamster/content/character/GameHamster.gd" id="1_lmp6a"]
+[ext_resource type="PackedScene" uid="uid://bnxdpmwxx5yr3" path="res://hamster/test/test_poop.tscn" id="2_58hxu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2gack"]
+albedo_color = Color(0.74525917, 0.47831333, 0.10487869, 1)
+metallic = 0.19
+metallic_specular = 0.13
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lmp6a"]
+height = 1.0
+radial_segments = 8
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_58hxu"]
+albedo_color = Color(0.74525917, 0.47831333, 0.10487869, 1)
+metallic = 0.19
+metallic_specular = 0.13
+
+[sub_resource type="SphereMesh" id="SphereMesh_j2jvg"]
+radius = 0.39
+height = 0.555
+radial_segments = 4
+rings = 8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lmp6a"]
+albedo_color = Color(0.5205634, 0.53930324, 0.63864756, 1)
+metallic = 0.19
+metallic_specular = 0.13
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5p4rk"]
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.5
+radial_segments = 8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_58hxu"]
+radius = 0.36572266
+height = 1.2172852
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_lmp6a"]
+radius = 2.503267
+
+[node name="TestHamster" type="CharacterBody3D" unique_id=1466840017 node_paths=PackedStringArray("sensor_vision", "sensor_forward_wall", "sensor_forward_floor", "sensor_forward_platform")]
+collision_layer = 2
+script = ExtResource("1_lmp6a")
+poop_scene = ExtResource("2_58hxu")
+hamster_scene = null
+sensor_vision = NodePath("Area3DVision")
+sensor_forward_wall = NodePath("RayCast3DWall")
+sensor_forward_floor = NodePath("RayCast3DForwardFloor")
+sensor_forward_platform = NodePath("RayCast3DPlatform")
+metadata/_custom_type_script = "uid://cdql2aq2f4uml"
+
+[node name="Node3D" type="Node3D" parent="." unique_id=76981460]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D" unique_id=1156219247]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.43600723, 0)
+material_override = SubResource("StandardMaterial3D_2gack")
+mesh = SubResource("CapsuleMesh_lmp6a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/MeshInstance3D" unique_id=1446606461]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.66251755, 0)
+material_override = SubResource("StandardMaterial3D_58hxu")
+mesh = SubResource("SphereMesh_j2jvg")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Node3D/MeshInstance3D" unique_id=1086798214]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.024625644, 0.6350771, 0.20706064)
+material_override = SubResource("StandardMaterial3D_lmp6a")
+mesh = SubResource("CylinderMesh_5p4rk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1785990030]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5417561, 0)
+shape = SubResource("CapsuleShape3D_58hxu")
+
+[node name="Area3DVision" type="Area3D" parent="." unique_id=713481176]
+collision_mask = 6
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3DVision" unique_id=641493564]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2937893, -1.8251293)
+shape = SubResource("SphereShape3D_lmp6a")
+
+[node name="RayCast3DWall" type="RayCast3D" parent="." unique_id=1023888746]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0965317, -0.37676525)
+target_position = Vector3(0, 0, -2)
+
+[node name="RayCast3DPlatform" type="RayCast3D" parent="." unique_id=1368729071]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.106624186, -0.37676525)
+target_position = Vector3(0, 0, -2)
+
+[node name="RayCast3DForwardFloor" type="RayCast3D" parent="." unique_id=1874698604]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.23215497, -1.2121128)
+target_position = Vector3(0, 0, -2)
